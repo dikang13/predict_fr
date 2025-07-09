@@ -69,3 +69,15 @@ def import_from_flv_utils(*,
     data['1h_starved']  = [out7, out8]
 
     return data
+
+
+def save_dict_as_pickle(dictionary, filename):
+    """Save dictionary as pickle file (binary, preserves Python objects)"""
+    with open(filename, 'wb') as f:
+        pickle.dump(dictionary, f)
+    print(f"Dictionary saved as pickle: {filename}")
+    
+def load_dict_from_pickle(filename):
+    """Load dictionary from pickle file"""
+    with open(filename, 'rb') as f:
+        return pickle.load(f)
