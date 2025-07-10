@@ -1,3 +1,4 @@
+import pickle
 import flv_utils as flv
 
 def import_from_flv_utils(*,

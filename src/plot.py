@@ -3,20 +3,21 @@ import seaborn as sns
 import numpy as np
 import pandas as pd
 from scipy import stats
+from reference import *
 
-def create_box_plot(perf_gains_by_class, figsize=(15, 5), save_path=None):
+def create_box_plot(perf_gain, figsize=(15, 5), save_path=None):
     """
     Create a box plot for performance gains by neuron class using the defined color scheme.
     
     Parameters:
-    perf_gains_by_class: dict with neuron_class -> performance_gains
+    perf_gain: dict with neuron_class -> performance_gains
     figsize: tuple, figure size
     save_path: str, path to save the figure (optional)
     """
     
     # Prepare data for plotting
-    data_values = list(perf_gains_by_class.values())
-    class_names = list(perf_gains_by_class.keys())
+    data_values = list(perf_gain.values())
+    class_names = list(perf_gain.keys())
     
     # Get colors for each neuron class
     plot_colors = []
@@ -82,19 +83,19 @@ def create_box_plot(perf_gains_by_class, figsize=(15, 5), save_path=None):
     plt.show()
 
 
-def create_strip_plot(perf_gains_by_class, figsize=(5, 12), save_path=None, title=None, baseline=0):
+def create_strip_plot(perf_gain, figsize=(5, 12), save_path=None, title=None, baseline=0):
     """
     Create an enhanced strip plot with neuron class colors and additional statistical information.
     
     Parameters:
-    perf_gains_by_class: dict with neuron_class -> performance_gains
+    perf_gain: dict with neuron_class -> performance_gains
     figsize: tuple, figure size
     save_path: str, path to save the figure (optional)
     """
     
     # Prepare data
     data_for_plot = []
-    for neuron_class, gains in perf_gains_by_class.items():
+    for neuron_class, gains in perf_gain.items():
         for gain in gains:
             data_for_plot.append({
                 'Neuron Class': neuron_class,
@@ -106,9 +107,9 @@ def create_strip_plot(perf_gains_by_class, figsize=(5, 12), save_path=None, titl
     # Create subplot
     fig, ax2 = plt.subplots(1, 1, figsize=figsize)
     
-    class_names = list(perf_gains_by_class.keys())
-    medians = [np.median(gains) for gains in perf_gains_by_class.values()]
-    stds = [np.std(gains) for gains in perf_gains_by_class.values()]
+    class_names = list(perf_gain.keys())
+    medians = [np.median(gains) for gains in perf_gain.values()]
+    stds = [np.std(gains) for gains in perf_gain.values()]
     
     # Get colors for each neuron class
     plot_colors = []

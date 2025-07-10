@@ -1,35 +1,58 @@
 import numpy as np
-from scipy.interpolate import CubicSpline
+# from scipy.interpolate import CubicSpline
+from sklearn.linear_model import TheilSenRegressor
 
 def get_baseline(arr, t_start=6, t_end=10):
     """
     Calculate median across the time window for all observations at once
     """
-    assert len(arr.shape) == 2, "get_baseline() takes in 2D numpy arrays only"
+    assert len(arr.shape) == 2, "Expects 2D numpy arrays in shape (n_samples, t_timepoints) only"
     baseline = np.median(arr[:, t_start:t_end], axis=1, keepdims=True)
     
-    return baseline
+    return baseline   # shape (n_samples, 1)
 
 
-def compute_derivative(arr, t_start=6, t_end=18):
+# def get_slope_cubicSpline(arr, t_start=8, t_end=12):
     
-    assert len(arr.shape) == 2, "compute_derivative() takes in 2D numpy arrays only"
+#     assert len(arr.shape) == 2, "Expects 2D numpy arrays in shape (n_samples, t_timepoints) only"
     
-    # Initialize derivative array for only the fitted portion
-    arr_deriv = np.zeros((arr.shape))
+#     # Initialize derivative array for only the fitted portion
+#     arr_deriv = np.zeros_like(arr)
     
-    # Create x values for the spline fitting
-    x = np.arange(t_end-t_start)
+#     # Create x values for the spline fitting
+#     x = np.arange(t_start, t_end)
     
-    # Compute derivative for each row
-    for i in range(arr.shape[0]):
-        # Fit cubic spline to first n_values of the row
-        cs = CubicSpline(x, arr[i, t_start:t_end])
+#     # Compute derivative for each row
+#     for i in range(arr.shape[0]):
+#         # Fit cubic spline to first n_values of the row
+#         cs = CubicSpline(x, arr[i, t_start:t_end])
         
-        # Compute derivative at the fitted points
-        arr_deriv[i, t_start:t_end] = cs(x, nu=1)  # nu=1 for first derivative
+#         # Compute derivative at the fitted points
+#         arr_deriv[i, t_start:t_end] = cs(x, nu=1)  # nu=1 for first derivative
     
-    return arr_deriv
+#     return arr_deriv
+
+
+def get_slope_TheilSen(arr, t_start=8, t_end=12):
+    """
+    Compute robust slope (derivative) from t_start to t_end using Theil-Sen regression.
+    Input:
+        arr: 2D numpy array of shape (n_rows, n_timepoints)
+        t_start, t_end: time range to fit the slope over
+    Returns:
+        arr_deriv: 2D array of same shape, with slopes filled in t_start:t_end and 0 elsewhere
+    """
+    assert len(arr.shape) == 2, "Expects a 2D numpy array in shape (n_samples, t_timepoints) only"
+
+    slopes = np.zeros((arr.shape[0], 1))
+    x = np.arange(t_start, t_end)
+
+    for i in range(arr.shape[0]):
+        y_segment = arr[i, t_start:t_end]
+        model = TheilSenRegressor().fit(x.reshape(-1, 1), y_segment)
+        slopes[i] = model.coef_[0]
+
+    return slopes    # shape (n_samples, 1)
 
 
 def print_class_statistics(X, y, feature_names=None):

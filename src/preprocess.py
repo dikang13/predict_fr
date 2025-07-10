@@ -28,7 +28,7 @@ def flag_nan_in_array(arr, t_start=6, t_end=18):
     return flags, indices
 
 
-def preprocess_labels(X, y, animal_id=None):
+def preprocess_labels(X, y, animal_id=None, verbose=False):
     """
     Remove samples where label == 1 and convert label == 2 to label == 1.
     
@@ -57,10 +57,11 @@ def preprocess_labels(X, y, animal_id=None):
         # Convert to numpy array for boolean indexing, then back to list
         animal_id_filtered = animal_id[keep_indices]
     
-    print(f"Original data shape: {X.shape}")
-    print(f"Filtered data shape: {X_filtered.shape}")
-    print(f"Original label distribution: {np.bincount(y)}")
-    print(f"Filtered label distribution: {np.bincount(y_filtered)}")
+    if verbose:
+        print(f"Original data shape: {X.shape}")
+        print(f"Filtered data shape: {X_filtered.shape}")
+        print(f"Original label distribution: {np.bincount(y)}")
+        print(f"Filtered label distribution: {np.bincount(y_filtered)}")
     
     if animal_id is not None:
         print(f"Original animal_id length: {len(animal_id)}")
