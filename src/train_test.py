@@ -40,25 +40,16 @@ def fit_logistic_regression_single_split(X, y, test_size=0.2, random_state=42, v
     y_pred_proba = model.predict_proba(X_test)
     
     # Print model performance
-    print("Model Performance:")
-    print(f"Training Accuracy: {model.score(X_train, y_train):.4f}")
-    print(f"Testing Accuracy: {model.score(X_test, y_test):.4f}")
-    print(f"Model Weights: {model.weights}")
-    print(f"Model Bias: {model.bias:.4f}")
-    
-    print("\nClassification Report:")
-    macro_f1, auc = classification_report(y_test, y_pred, y_pred_proba, verbose=verbose)
+    f1_score, auroc, auprc = eval_metrics(y_test, y_pred, y_pred_proba_positive, verbose=verbose)
     
     if verbose: 
+        print("Model Performance:")
         print_confusion_matrix(y_test, y_pred)
-        print(f"\nOverall F1 Score (Macro): {macro_f1:.4f}")
-        if auc is not None:
-            print(f"AUC: {auc:.4f}")
+        print(f"\nF1 Score (Macro): {f1_score:.4f}")
+        print(f"AUROC: {auroc:.4f}")
+        print(f"AUPRC: {auprc:.4f}")
     
-    # Calculate testing accuracy
-    acc_test = model.score(X_test, y_test)
-    
-    return model, X_train, X_test, y_train, y_test, acc_test, macro_f1, auc
+    return (f1_score, auroc, auprc)
     
     
 def fit_logistic_regression_grouped_cv(X, y, ani_id, verbose=False):

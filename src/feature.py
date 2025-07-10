@@ -1,6 +1,9 @@
 import numpy as np
 # from scipy.interpolate import CubicSpline
 from sklearn.linear_model import TheilSenRegressor
+import warnings
+from sklearn.exceptions import ConvergenceWarning
+
 
 def get_baseline(arr, t_start=6, t_end=10):
     """
@@ -49,8 +52,11 @@ def get_slope_TheilSen(arr, t_start=8, t_end=12):
 
     for i in range(arr.shape[0]):
         y_segment = arr[i, t_start:t_end]
-        model = TheilSenRegressor().fit(x.reshape(-1, 1), y_segment)
-        slopes[i] = model.coef_[0]
+        
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", ConvergenceWarning)  # ignore convergence warnings since similar values is not a problem
+            model = TheilSenRegressor().fit(x.reshape(-1, 1), y_segment)
+            slopes[i] = model.coef_[0]
 
     return slopes    # shape (n_samples, 1)
 
