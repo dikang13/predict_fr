@@ -26,6 +26,7 @@ def bootstrap_mean_std(traces, n_bootstrap=100):
 
     return mean_of_means, std_of_means
 
+
 def original_mean_std(traces):
     """Calculate mean and standard error of original traces"""
     traces = np.array(traces)
@@ -36,6 +37,7 @@ def original_mean_std(traces):
     std_trace = np.nanstd(traces, axis=0)
 
     return mean_trace, std_trace
+
 
 def get_run_start_eta(
     list_outs:list, neuron_classes:list[str],
@@ -56,6 +58,7 @@ def get_run_start_eta(
     beh_data    = []
     neu_data    = []
     rev_data    = []
+    rev_data_2  = []
     target_data = []
     animal_data = []
     
@@ -152,13 +155,15 @@ def get_run_start_eta(
                 beh_data.append(beh_snippets)
                 neu_data.append(neu_snippets)
                 rev_data.append(rev_label)
+                rev_data_2.append(r_dur)
                 target_data.append(fwd_label)
                 animal_data.append(animal_id)
     
     beh_data    = np.array(beh_data).transpose(1,0,2)
     neu_data    = np.array(neu_data).transpose(1,0,2)
     rev_data    = np.array(rev_data)
+    rev_data_2  = np.array(rev_data_2)
     target_data = np.array(target_data)
     animal_data = np.array(animal_data)
     
-    return beh_data, neu_data, rev_data, target_data, animal_data
+    return beh_data, neu_data, rev_data, rev_data_2, target_data, animal_data

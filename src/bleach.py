@@ -3,7 +3,7 @@ from pathlib import Path
 
 os.environ["XLA_PYTHON_CLIENT_MEM_FRACTION"] = "0.1"
 os.environ["JAX_DEBUG_NANS"] = "false"
-os.environ["CUDA_VISIBLE_DEVICES"] = "2"
+os.environ["CUDA_VISIBLE_DEVICES"] = "3"
 
 from multianimalbleachcorrect import apply_bleach_correction
 
